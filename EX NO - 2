@@ -1,0 +1,58 @@
+import pandas as pd
+import numpy as np
+
+data = pd.read_csv("trainingdata.csv")
+
+print("Training Data:\n")
+print(data)
+
+concepts = np.array(data.iloc[:, :-1])
+target = np.array(data.iloc[:, -1])
+
+
+def candidate_elimination(concepts, target):
+
+    specific = concepts[0].copy()
+    general = [['?' for _ in range(len(specific))] for _ in range(len(specific))]
+
+    print("\nInitial Specific Hypothesis:")
+    print(specific)
+
+    print("\nInitial General Hypothesis:")
+    print(np.array(general))
+
+    for i in range(len(concepts)):
+
+        if target[i] == "Yes":
+
+            for j in range(len(specific)):
+                if concepts[i][j] != specific[j]:
+                    specific[j] = '?'
+                    general[j][j] = '?'
+
+        elif target[i] == "No":
+
+            for j in range(len(specific)):
+                if concepts[i][j] != specific[j]:
+                    general[j][j] = specific[j]
+                else:
+                    general[j][j] = '?'
+
+        print("\nStep", i+1)
+        print("Specific:", specific)
+        print("General:")
+        print(np.array(general))
+
+    general_final = [g for g in general if g.count('?') != len(g)]
+
+    return specific, general_final
+
+
+s, g = candidate_elimination(concepts, target)
+
+print("\n==============================")
+print("Final Specific Hypothesis:")
+print(s)
+
+print("\nFinal General Hypothesis:")
+print(np.array(g))
