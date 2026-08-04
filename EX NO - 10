@@ -1,0 +1,34 @@
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.mixture import GaussianMixture
+
+X = np.array([
+    [1], [2], [3], [4], [5],
+    [10], [11], [12], [13], [14]
+])
+
+gmm = GaussianMixture(n_components=2, random_state=42)
+
+gmm.fit(X)
+
+labels = gmm.predict(X)
+
+print("Data Points:")
+print(X.flatten())
+
+print("\nCluster Labels:")
+print(labels)
+
+print("\nCluster Means:")
+print(gmm.means_.flatten())
+
+print("\nCluster Weights:")
+print(gmm.weights_)
+
+plt.scatter(X, np.zeros_like(X), c=labels, cmap='viridis', s=100)
+plt.title("Expectation Maximization Clustering")
+plt.xlabel("Data Points")
+plt.yticks([])
+plt.show()
