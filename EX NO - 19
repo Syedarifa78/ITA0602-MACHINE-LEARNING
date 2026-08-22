@@ -1,0 +1,78 @@
+# Naive Bayes Classification for Bank Loan Prediction
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Create sample bank loan dataset
+data = {
+    'Income': [25, 35, 45, 50, 60, 70, 80, 90, 100, 120,
+               30, 40, 55, 65, 75, 85, 95, 110, 28, 48],
+    'Age': [22, 25, 30, 35, 40, 45, 50, 55, 60, 65,
+            24, 32, 38, 42, 48, 52, 58, 62, 26, 36],
+    'LoanAmount': [10, 15, 20, 25, 30, 35, 40, 45, 50, 60,
+                   12, 18, 28, 32, 38, 42, 48, 55, 14, 22],
+    'CreditScore': [550, 580, 600, 620, 650, 680, 700, 720, 750, 780,
+                    560, 590, 630, 660, 690, 710, 730, 760, 570, 610],
+    'LoanApproved': [
+        'No', 'No', 'No', 'No', 'Yes',
+        'Yes', 'Yes', 'Yes', 'Yes', 'Yes',
+        'No', 'No', 'Yes', 'Yes', 'Yes',
+        'Yes', 'Yes', 'Yes', 'No', 'Yes'
+    ]
+}
+
+df = pd.DataFrame(data)
+
+print("Bank Loan Dataset:\n")
+print(df)
+
+# Features and target
+X = df[['Income', 'Age', 'LoanAmount', 'CreditScore']]
+y = df['LoanApproved']
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42
+)
+
+# Create Naive Bayes model
+model = GaussianNB()
+
+# Train model
+model.fit(X_train, y_train)
+
+# Predict test data
+y_pred = model.predict(X_test)
+
+# Display results
+print("\nActual Loan Status:")
+print(y_test.values)
+
+print("\nPredicted Loan Status:")
+print(y_pred)
+
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("\nAccuracy:")
+print(accuracy * 100, "%")
+
+# Confusion Matrix
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+# Predict a new applicant
+new_applicant = [[75, 40, 30, 700]]
+
+prediction = model.predict(new_applicant)
+
+print("\nNew Applicant:")
+print("Income = 75")
+print("Age = 40")
+print("Loan Amount = 30")
+print("Credit Score = 700")
+
+print("\nLoan Prediction:")
+print(prediction[0])
